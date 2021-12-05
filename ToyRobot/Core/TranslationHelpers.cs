@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using ToyRobot.Dtos;
 using ToyRobot.Entities;
@@ -39,12 +40,13 @@ namespace ToyRobot.Core
         /// </summary>
         public static Position ConvertIntoPosition(this string input)
         {
-            if (!string.IsNullOrEmpty(input) && input.Length == 3)
+            if (!string.IsNullOrEmpty(input) &&
+                input.Count(x => (x == ',')) == 1)
             {
-                var xInput = input.Substring(0, 1);
+                var xInput = input.Substring(0, input.IndexOf(","));
                 var isXValid = int.TryParse(xInput, out int positionX);
 
-                var yInput = input.Substring(2, 1);
+                var yInput = input.Substring(input.IndexOf(",") + 1);
                 var isYValid = int.TryParse(yInput, out int positionY);
                 if (isXValid && isYValid)
                     return (new Position(positionX, positionY));
@@ -78,46 +80,59 @@ namespace ToyRobot.Core
         public static PlaceDto ConvertIntoPlaceDto(this string input)
         {
             var dto = new PlaceDto();
-            if (string.IsNullOrEmpty(input) ||
-                input.Length < 9)
+            var inputContainsDirection = false;
+
+            if (!IsValidPlaceInStructure(input))
                 return dto;
 
-            var positionInput = input.Substring(6, 3);
-            var directionInput = string.Empty;
-            if (input.Length > 9)
-                directionInput = input.Substring(10);
+            inputContainsDirection = input.Count(x => (x == ',')) == 2;
 
             #region GetPosition
+            var positionInput = input.Substring(CommandEnum.Place.ToString().Length + 1);
+            if (inputContainsDirection)
+            {
+                var positionInputLength = positionInput.Length - input.Substring(input.LastIndexOf(",")).Length;
+                positionInput = input.Substring(CommandEnum.Place.ToString().Length + 1, positionInputLength);
+            }   
+             
             var position = positionInput.ConvertIntoPosition();
             if (position is null)
             {
                 return dto;
-            }               
-            else
-                dto.Position = position;
-
+            }
             #endregion
 
             #region GetDirection
-            if (string.IsNullOrEmpty(directionInput))
+            Direction outputDirection = null;
+            if (inputContainsDirection)
             {
-                dto.IsValid = true;
-                return dto;
-            }
-            else
-            {
-                var direction = directionInput.ConvertIntoDirection();
-                if (direction is null)
+                var directionInput = input.Substring(input.LastIndexOf(",") + 1);
+                outputDirection = directionInput.ConvertIntoDirection();
+                if (outputDirection is null)
                     return dto;
-                else
-                {
-                    dto.Direction = direction;
-                    dto.IsValid = true;
-                    return dto;
-                }
-            }
+            }           
             #endregion
+           
+            dto.Direction = outputDirection;
+            dto.Position = position;
+            dto.IsValid = true;
+            return dto;
+        }
 
+        private static bool IsValidPlaceInStructure(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return false;
+            else
+            {               
+                int numberOfCommas = input.Count(x => (x == ','));
+                if (input.Length < CommandEnum.Place.ToString().Length + 4 ||
+                    numberOfCommas < 1 ||
+                    numberOfCommas > 2)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

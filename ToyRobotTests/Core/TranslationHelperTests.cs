@@ -12,30 +12,56 @@ namespace ToyRobot.Core
     public class TranslationHelperTests
     {
         [TestMethod]
-        public void ConvertIntoPosition_InvalidPosition_Null()
+        public void ConvertIntoPosition_NoCommas_Null()
         {
             var input = "ABC";
             var position = input.ConvertIntoPosition();
-            Assert.IsNull(position);
+            Assert.IsNull(position);          
+        }
 
-            input = "3,Z";
-            position = input.ConvertIntoPosition();
+        [TestMethod]
+        public void ConvertIntoPosition_XIsInvalid_Null()
+        {
+            var input = "A,0";
+            var position = input.ConvertIntoPosition();
             Assert.IsNull(position);
+        }
 
-            input = "A,0";
-            position = input.ConvertIntoPosition();
+        [TestMethod]
+        public void ConvertIntoPosition_YIsInvalid_Null()
+        {
+            var input = "3,Z";
+            var position = input.ConvertIntoPosition();
             Assert.IsNull(position);
+        }
+
+        [TestMethod]
+        public void ConvertIntoPosition_YAndXAreInvalid_Null()
+        {
+            var input = "Yfdsf,Zfdsfdas";
+            var position = input.ConvertIntoPosition();
+            Assert.IsNull(position);
+        }
+
+        [TestMethod]
+        public void ConvertIntoPosition_PositionOutsideOfTable_InvalidePosition()
+        {
+            var input = "3545758,278878";
+            var position = input.ConvertIntoPosition();
+            Assert.AreEqual(3545758, position.X);
+            Assert.AreEqual(278878, position.Y);
+            Assert.IsFalse(position.IsValid);
         }
 
         [TestMethod]
         public void ConvertIntoPosition_ValidPosition()
         {
-            var input = "3,2";
+            var input = "2,5";
             var position = input.ConvertIntoPosition();
-            Assert.AreEqual(3, position.X);
-            Assert.AreEqual(2, position.Y);
+            Assert.AreEqual(2, position.X);
+            Assert.AreEqual(5, position.Y);
             Assert.IsTrue(position.IsValid);
-                    }
+        }
 
         [TestMethod]
         public void GetCommand_InvalidInput_CommandIgnored()
@@ -104,49 +130,78 @@ namespace ToyRobot.Core
             var input = "Invalid Input!!!";
             var placeDto = input.ConvertIntoPlaceDto();
             Assert.IsFalse(placeDto.IsValid);
-          
-            input = "Place x,y";
-            placeDto = input.ConvertIntoPlaceDto();
-            Assert.IsFalse(placeDto.IsValid);
-          
-            input = "Place";
-            placeDto = input.ConvertIntoPlaceDto();
+        }
+
+        [TestMethod]
+        public void ConvertIntoPlaceDto_ContainsNoCommas_InvalidInput()
+        {
+            var input = "Place 4 3 West";
+            var placeDto = input.ConvertIntoPlaceDto();
             Assert.IsFalse(placeDto.IsValid);
         }
 
         [TestMethod]
-        public void GetPlaceParametersFromInput_ValidInput()
+        public void ConvertIntoPlaceDto_ThreeCommas_InvalidInput()
         {
-            var input = "Place 3,4";
+            var input = "Place ,34,33,West";
             var placeDto = input.ConvertIntoPlaceDto();
-            Assert.AreEqual(3, placeDto.Position.X);
-            Assert.AreEqual(4, placeDto.Position.Y);
+            Assert.IsFalse(placeDto.IsValid);
+        }
+
+        [TestMethod]
+        public void ConvertIntoPlaceDto_Empty_InvalidInput()
+        {
+            var input = string.Empty;
+            var placeDto = input.ConvertIntoPlaceDto();
+            Assert.IsFalse(placeDto.IsValid);
+        }
+
+        [TestMethod]
+        public void ConvertIntoPlaceDto_OnlyPosition_Position()
+        {
+            var input = "Place 33,44";
+            var placeDto = input.ConvertIntoPlaceDto();
+            Assert.AreEqual(33, placeDto.Position.X);
+            Assert.AreEqual(44, placeDto.Position.Y);
             Assert.IsNull(placeDto.Direction);
             Assert.IsTrue(placeDto.IsValid);
+        }
 
-            input = "Place 3,4,North";           
-            placeDto = input.ConvertIntoPlaceDto();
+        public void ConvertIntoPlaceDto_NorthValidInput_PlaceDto()
+        {
+            var input = "Place 333,444,North";
+            var placeDto = input.ConvertIntoPlaceDto();
             Assert.IsTrue(placeDto.IsValid);
-            Assert.AreEqual(3, placeDto.Position.X);
-            Assert.AreEqual(4, placeDto.Position.Y);
+            Assert.AreEqual(333, placeDto.Position.X);
+            Assert.AreEqual(444, placeDto.Position.Y);
             Assert.AreEqual(CardinalDirectionEnum.North, placeDto.Direction.CardinalDirection);
+        }
 
-            input = "Place 3,4,South";
-            placeDto = input.ConvertIntoPlaceDto();
+        public void ConvertIntoPlaceDto_SouthValidInput_PlaceDto()
+        {
+            var input = "Place 3,4,South";
+            var placeDto = input.ConvertIntoPlaceDto();
             Assert.IsTrue(placeDto.IsValid);
             Assert.AreEqual(3, placeDto.Position.X);
             Assert.AreEqual(4, placeDto.Position.Y);
             Assert.AreEqual(CardinalDirectionEnum.South, placeDto.Direction.CardinalDirection);
+        }
 
-            input = "Place 3,4,EAST"; 
-            placeDto = input.ConvertIntoPlaceDto();
+        public void ConvertIntoPlaceDto_EastValidInput_PlaceDto()
+        {
+            var input = "Place 3,4,EAST";
+            var placeDto = input.ConvertIntoPlaceDto();
             Assert.IsTrue(placeDto.IsValid);
             Assert.AreEqual(3, placeDto.Position.X);
             Assert.AreEqual(4, placeDto.Position.Y);
             Assert.AreEqual(CardinalDirectionEnum.East, placeDto.Direction.CardinalDirection);
+        }
 
-            input = "Place 3,4,west"; 
-            placeDto = input.ConvertIntoPlaceDto();
+        [TestMethod]
+        public void ConvertIntoPlaceDto_WestValidInput_PlaceDto()
+        { 
+            var input = "Place 3,4,west"; 
+            var placeDto = input.ConvertIntoPlaceDto();
             Assert.IsTrue(placeDto.IsValid);
             Assert.AreEqual(3, placeDto.Position.X);
             Assert.AreEqual(4, placeDto.Position.Y);
@@ -200,6 +255,36 @@ namespace ToyRobot.Core
             var input = "Place 2,4,Invalid!!!";
             var placeDto = input.ConvertIntoPlaceDto();
             Assert.IsNull(placeDto.Direction);
+            Assert.IsFalse(placeDto.IsValid);
+        }
+
+        [TestMethod]
+        public void ConvertIntoPlaceDto_CoordinateHasManyDigitsAndDirection()
+        {
+            var input = "Place 778892,786554,North";
+            var placeDto = input.ConvertIntoPlaceDto();
+            Assert.IsTrue(placeDto.IsValid);
+            Assert.AreEqual(778892, placeDto.Position.X);
+            Assert.AreEqual(786554, placeDto.Position.Y);
+            Assert.AreEqual(CardinalDirectionEnum.North, placeDto.Direction.CardinalDirection);
+        }
+
+        [TestMethod]
+        public void ConvertIntoPlaceDto_CoordinateHasManyDigitsAndNoDirection()
+        {
+            var input = "Place 778892,786554";
+            var placeDto = input.ConvertIntoPlaceDto();
+            Assert.IsTrue(placeDto.IsValid);
+            Assert.AreEqual(778892, placeDto.Position.X);
+            Assert.AreEqual(786554, placeDto.Position.Y);
+            Assert.IsNull(placeDto.Direction?.CardinalDirection);
+        }
+
+        [TestMethod]
+        public void ConvertIntoPlaceDto_CoordinateHasManyDigitsAndCommaAtTheEnd()
+        {
+            var input = "Place 778892,786554,";
+            var placeDto = input.ConvertIntoPlaceDto();
             Assert.IsFalse(placeDto.IsValid);
         }
     }
