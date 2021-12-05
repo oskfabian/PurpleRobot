@@ -24,5 +24,11 @@ namespace ToyRobot.Core
             Report,
             Unknow
         }
+
+        public enum SideEnum
+        {
+            Right,
+            Left
+        }
     }
 }

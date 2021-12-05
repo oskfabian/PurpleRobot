@@ -14,7 +14,7 @@ namespace ToyRobotTests.Entities
         public void CurrentlyWest_TurnRight_North()
         {
             var direction = new Direction(CardinalDirectionEnum.West);
-            direction.TurnRight();
+            direction.Turn(SideEnum.Right);
             var expectedResult = CardinalDirectionEnum.North;
             Assert.AreEqual(expectedResult, direction.CardinalDirection, "Failed to turn right");
         }
@@ -23,7 +23,7 @@ namespace ToyRobotTests.Entities
         public void CurrentlyWest_TurnLeft_South()
         {
             var direction = new Direction(CardinalDirectionEnum.West);
-            direction.TurnLeft();
+            direction.Turn(SideEnum.Left);
             var expectedResult = CardinalDirectionEnum.South;
             Assert.AreEqual(expectedResult, direction.CardinalDirection, "Failed to turn left");
         }
@@ -32,7 +32,7 @@ namespace ToyRobotTests.Entities
         public void CurrentlyNorth_TurnRight_East()
         {
             var direction = new Direction(CardinalDirectionEnum.North);
-            direction.TurnRight();
+            direction.Turn(SideEnum.Right);
             var expectedResult = CardinalDirectionEnum.East;
             Assert.AreEqual(expectedResult, direction.CardinalDirection, "Failed to turn right");
         }
@@ -41,7 +41,7 @@ namespace ToyRobotTests.Entities
         public void CurrentlyNorth_TurnLeft_West()
         {
             var direction = new Direction(CardinalDirectionEnum.North);
-            direction.TurnLeft();
+            direction.Turn(SideEnum.Left);
             var expectedResult = CardinalDirectionEnum.West;
             Assert.AreEqual(expectedResult, direction.CardinalDirection, "Failed to turn left");
         }

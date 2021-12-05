@@ -21,10 +21,10 @@ namespace ToyRobotTests.Entities
             var robot = new Robot();
             Assert.IsFalse(robot.IsOnTable, "Invalid Command was executed.");
            
-            robot.TurnLeft();
+            robot.Turn(SideEnum.Left);
             Assert.IsFalse(robot.IsOnTable, "Invalid TurnLeft Command was executed.");
            
-            robot.TurnRight();
+            robot.Turn(SideEnum.Right);
             Assert.IsFalse(robot.IsOnTable, "Invalid TurnRight Command was executed.");
 
             robot.Move();

@@ -36,10 +36,10 @@ namespace ToyRobot.Managers
                         Robot.Place(placeDto.Position, placeDto.Direction);
                     break;
                 case CommandEnum.Left:
-                    Robot.TurnLeft();
+                    Robot.Turn(SideEnum.Left);
                     break;
                 case CommandEnum.Right:
-                    Robot.TurnRight();
+                    Robot.Turn(SideEnum.Right);
                     break;
                 case CommandEnum.Move:
                     Robot.Move();

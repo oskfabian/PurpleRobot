@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ToyRobot.Dtos;
+using static ToyRobot.Core.Enums;
 
 namespace ToyRobot.Entities
 {
@@ -45,18 +46,12 @@ namespace ToyRobot.Entities
             ChangeLocation(location);
             if (direction != null)
                 Direction = direction;
-        }      
+        }   
 
-        public void TurnLeft()
+        public void Turn(SideEnum side)
         {
             if (IsOnTable)
-                Direction.TurnLeft();
-        }
-
-        public void TurnRight()
-        {
-            if (IsOnTable)
-                Direction.TurnRight();
+                Direction.Turn(side);
         }
 
         public void Move()
