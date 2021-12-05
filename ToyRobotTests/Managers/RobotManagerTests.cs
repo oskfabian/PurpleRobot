@@ -30,9 +30,9 @@ namespace ToyRobot.Managers
             manager.ExecuteInput(input);
 
             input = "REPORT";
-            var output = manager.ExecuteInput(input);
+            var outputDto = manager.ExecuteInput(input);
 
-            Assert.AreEqual("0,1,North", output);
+            Assert.AreEqual("0,1,North", outputDto.Output);
         }
 
 
@@ -105,9 +105,9 @@ namespace ToyRobot.Managers
             manager.ExecuteInput(input);
 
             input = "Report";
-            var output = manager.ExecuteInput(input);
+            var outputDto = manager.ExecuteInput(input);
 
-            Assert.AreEqual("0,0,West", output);
+            Assert.AreEqual("0,0,West", outputDto.Output);
         }
     }
 }

@@ -17,7 +17,7 @@ namespace ToyRobot
                     break;
                 }
                 var output = manager.ExecuteInput(input);
-                if (!string.IsNullOrEmpty(output))
+                if (output.IsPrintable)
                     Console.WriteLine(output);
             }
         }

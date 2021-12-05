@@ -5,20 +5,15 @@ using static ToyRobot.Core.Enums;
 
 namespace ToyRobot.Dtos
 {
-    public class ReportDto
+    public class OutputDto
     {
-        public string Output
+        public bool IsPrintable
         {
             get
             {
-                if (IsOnTable)
-                    return $"{Position.X},{Position.Y},{Orientation.ToString()}";
-
-                return string.Empty;
+                return !string.IsNullOrEmpty(Output);
             }
-        }
-        public CardinalDirectionEnum? Orientation { get; set; }
-        public PositionDto Position { get; set; }
-        public bool IsOnTable { get; set; }
+        }       
+        public string Output { get; set; }
     }
 }

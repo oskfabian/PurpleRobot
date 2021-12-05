@@ -10,7 +10,7 @@ namespace ToyRobot.Managers
 {
     public interface IRobotManager
     {
-       string ExecuteInput(string input);
+        OutputDto ExecuteInput(string input);
     }
     public class RobotManager : IRobotManager
     {
@@ -21,15 +21,15 @@ namespace ToyRobot.Managers
             Robot = new Robot();
         }
 
-        string IRobotManager.ExecuteInput(string input)
+        OutputDto IRobotManager.ExecuteInput(string input)
         {
             var commandEnum = input.ConvertIntoCommand();
-            string output = string.Empty;
+            var outputDto = new OutputDto();
 
             switch (commandEnum)
             {
                 case CommandEnum.Unknow:
-                    return string.Empty;
+                    return outputDto;
                 case CommandEnum.Place:
                     var placeDto = input.ConvertIntoPlaceDto();
                     if (placeDto.IsValid)
@@ -46,10 +46,10 @@ namespace ToyRobot.Managers
                     break;
                 case CommandEnum.Report:
                     var reportDto = Robot.Report();
-                    output = reportDto.Output;
+                    outputDto.Output = reportDto.Output;
                     break;
             }
-            return output;
+            return outputDto;
         }
     }
 }
