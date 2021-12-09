@@ -20,7 +20,7 @@ namespace ToyRobot.Core
         {
             if (string.IsNullOrEmpty(input))
                 return CommandEnum.Unknow;
-            if (input.ToLower().StartsWith(CommandEnum.Place.ToString().ToLower()))
+            if (input.ToLower().StartsWith($"{CommandEnum.Place.ToString().ToLower()} "))
                 return CommandEnum.Place;
             else if (input.Equals(CommandEnum.Move.ToString().ToLower(), StringComparison.OrdinalIgnoreCase))
                 return CommandEnum.Move;
